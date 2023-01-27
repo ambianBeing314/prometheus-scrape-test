@@ -1,0 +1,11 @@
+route:
+  receiver: emailer
+receivers:
+- name: emailer
+  email_configs:
+  - to: email_id_for_alerts
+    from:  email_id_for_alerts 
+    smarthost: smtp.gmail.com:587 
+    auth_username: email_id_for_alerts  
+    auth_identity: email_id_for_alerts  
+    auth_password: app_password_cofigured_for_emailing_alerts

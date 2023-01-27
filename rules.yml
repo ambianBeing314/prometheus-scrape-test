@@ -1,0 +1,44 @@
+groups:
+  - name: Basic alerts
+    rules: 
+      - alert: Serving HTTP 4XX errors
+        expr:  rate(http_server_requests_seconds_count{status=~"4.*"}[3m]) > 0
+        for: 1m
+        labels:
+          severity: high
+        annotations:
+          summary: "Application instance {{ $labels.instance }} threw 4XX error"
+          description: "Application threw {{ $value }} errors in last 3 minutes"
+          priority: P1
+          team: foobar
+          app: rest-application
+      - alert: Serving HTTP 5XX errors
+        expr:  rate(http_server_requests_seconds_count{status=~"5.*"}[3m]) > 0
+        for: 1m
+        labels:
+          severity: high
+        annotations:
+          summary: "Application instance {{ $labels.instance }} threw 5XX error"
+          description: "Application threw {{ $value }} errors in last 3 minutes"
+          priority: P1
+          team: foobar
+          app: rest-application
+      - alert: Serving GRPC error response
+        expr:  increase(grpc_server_processing_duration_seconds_count{exported_service=~"v2.*", statusCode!="OK"}[10m]) > 0
+        for: 1m
+        labels:
+          severity: high
+        annotations:
+          summary: "Application instance {{ $labels.instance }} threw errors from GRPC services"
+          description: "Application threw {{ $value }} errors in last 10 minutes"
+          priority: P1
+          team: foobar
+          app: rest-application
+      - alert: Application down
+        expr:  up == 0
+        for: 1m
+        labels:
+          severity: high
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
